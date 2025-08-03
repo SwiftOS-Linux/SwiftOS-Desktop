@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM neon/kf5:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
