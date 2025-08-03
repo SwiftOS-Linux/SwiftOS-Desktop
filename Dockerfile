@@ -16,10 +16,7 @@ RUN apt update && \
     wget \
     software-properties-common \
     python3 \
-    python3-pip
-
-# Install Qt5 development packages
-RUN apt install -y \
+    python3-pip \
     qtbase5-dev \
     qtdeclarative5-dev \
     qtquickcontrols2-5-dev \
@@ -28,10 +25,7 @@ RUN apt install -y \
     qtchooser \
     qtbase5-dev-tools \
     libqt5svg5-dev \
-    libqt5x11extras5-dev
-
-# Install KDE Frameworks libraries
-RUN apt install -y \
+    libqt5x11extras5-dev \
     extra-cmake-modules \
     libkf5coreaddons-dev \
     libkf5i18n-dev \
@@ -44,18 +38,19 @@ RUN apt install -y \
     libkf5notifications-dev \
     libkf5globalaccel-dev \
     libkf5xmlgui-dev \
-    libkf5dbusaddons-dev
-
-# Install XCB/X11 dependencies
-RUN apt install -y \
+    libkf5dbusaddons-dev \
     libxcb1-dev \
     libxcb-xfixes0-dev \
     libxcb-util-dev \
     libxcb-keysyms1-dev \
-    libx11-xcb-dev
+    libx11-xcb-dev && \
+    apt clean && rm -rf /var/lib/apt/lists/*
 
-# Clean up to reduce image size
-RUN apt clean && rm -rf /var/lib/apt/lists/*
+# Set working directory
 WORKDIR /build
 
+# Expose the /build directory to mount files if needed
+VOLUME ["/build"]
+
+# Start bash when container runs
 CMD ["/bin/bash"]
