@@ -47,10 +47,10 @@ RUN apt update && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
-WORKDIR /build
+WORKDIR /root/SwiftOS-Desktop
 
 # Expose the /build directory to mount files if needed
-VOLUME ["/build"]
+VOLUME ["/root/SwiftOS-Desktop"]
 
 # Start bash when container runs
 CMD ["/bin/bash"]
