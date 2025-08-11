@@ -180,11 +180,6 @@ RUN git clone --branch v6.3.90 https://invent.kde.org/plasma/libkscreen.git
 RUN git clone https://invent.kde.org/plasma/knighttime.git
 RUN git clone https://invent.kde.org/plasma/layer-shell-qt.git
 
-COPY extractCompile.py /tmp/
-COPY compileByDir.py /tmp/
-RUN python3 extractCompile.py
-RUN python3 compileByDir.py
-
 RUN git clone https://invent.kde.org/libraries/polkit-qt-1.git && \
     cd polkit-qt-1 && \
     cmake -B build \
@@ -320,8 +315,6 @@ RUN git clone https://github.com/SwiftOS-Linux/plasma-workspace.git && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr -Dkglobalacceld_PATH=/usr/libexec/ -DCMAKE_BUILD_TYPE=Release && \
     make -j$(nproc) && \
     make install
-
-RUN python3 compileByDir.py
 
 RUN cd /root/SwiftOS-Desktop
 
