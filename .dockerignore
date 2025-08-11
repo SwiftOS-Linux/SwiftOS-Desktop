@@ -1,0 +1,12 @@
+build/
+*.so
+*.o
+*.a
+.git/
+.vscode/
+.idea/
+*.log
+*.tmp
+.DS_Store
+__pycache__/
+node_modules/

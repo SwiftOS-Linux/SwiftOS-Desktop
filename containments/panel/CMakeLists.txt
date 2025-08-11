@@ -5,5 +5,5 @@ plasma_add_applet(org.kde.panel
         LayoutManager.js
     RESOURCES
         main.xml
-    GENERATE_CONTAINMENT_CLASS
+    GENERATE_APPLET_CLASS
 )
