@@ -178,7 +178,15 @@ RUN wget https://download.kde.org/stable/frameworks/${KDE_VERSION}/kstatusnotifi
 RUN wget https://download.kde.org/stable/frameworks/${KDE_VERSION}/ktexteditor-${KDE_VERSION}.0.tar.xz
 RUN git clone --branch v6.3.90 https://invent.kde.org/plasma/libkscreen.git
 RUN git clone https://invent.kde.org/plasma/knighttime.git
-RUN git clone https://invent.kde.org/plasma/layer-shell-qt.git
+RUN git clone https://invent.kde.org/plasma/layer-shell-qt.git && \
+    cd layer-shell-qt && \
+    cmake -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_EXAMPLES=OFF \
+        -DQT_MAJOR_VERSION=6 && \
+    cd build && \
+    make -j$(nproc) && \
+    make install
 
 RUN git clone https://invent.kde.org/libraries/polkit-qt-1.git && \
     cd polkit-qt-1 && \
@@ -323,11 +331,12 @@ RUN dnf install -y kf6-kdoctools-devel accounts-qt6-devel kaccounts-integration-
 
 # Install missing X11 and XCB components
 RUN dnf install -y libICE-devel libSM-devel xcb-util-cursor-devel xcb-util-image-devel --skip-unavailable
+RUN sudo sed -i 's/port=3389/port=3390/g' /etc/xrdp/xrdp.ini
 RUN xrdp
 
 RUN cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release || true
 
-EXPOSE 3389
+EXPOSE 3390
 
 # Start bash by default
 CMD ["/bin/bash"]
