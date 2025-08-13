@@ -333,6 +333,7 @@ RUN dnf install -y kf6-kdoctools-devel accounts-qt6-devel kaccounts-integration-
 RUN dnf install -y libICE-devel libSM-devel xcb-util-cursor-devel xcb-util-image-devel --skip-unavailable
 RUN sudo sed -i 's/port=3389/port=3390/g' /etc/xrdp/xrdp.ini
 RUN sudo echo "startplasma-x11" >> /etc/xrdp/startwm.sh
+RUN sudo dnf -y install x11vnc
 RUN sudo xrdp
 
 RUN cmake -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release || true
