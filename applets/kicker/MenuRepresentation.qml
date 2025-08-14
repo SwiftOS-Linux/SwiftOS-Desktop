@@ -88,10 +88,10 @@ PlasmaComponents3.ScrollView {
             }
             KeyNavigation.right: rootList
             Keys.onPressed: event => {
-                let backArrowKey = (event.key === Qt.Key_Left && Application.layoutDirection === Qt.LeftToRight) ||
-                    (event.key === Qt.Key_Right && Application.layoutDirection === Qt.RightToLeft)
-                let forwardArrowKey = (event.key === Qt.Key_Right && Application.layoutDirection === Qt.LeftToRight) ||
-                    (event.key === Qt.Key_Left && Application.layoutDirection === Qt.RightToLeft)
+                let backArrowKey = (event.key === Qt.Key_Left && !mainRow.LayoutMirroring.enabled) ||
+                    (event.key === Qt.Key_Right && mainRow.LayoutMirroring.enabled)
+                let forwardArrowKey = (event.key === Qt.Key_Right && !mainRow.LayoutMirroring.enabled) ||
+                    (event.key === Qt.Key_Left && mainRow.LayoutMirroring.enabled)
 
                 if (backArrowKey & runnerColumns.visibleChildren.length > 1) {
                     const targetList = runnerColumns.visibleChildren[runnerColumns.visibleChildren.length-2]
@@ -122,8 +122,19 @@ PlasmaComponents3.ScrollView {
                 LayoutItemProxy {
                     target: sideBar.onTopPanel ? favoriteSystemActions : favoriteApps
                 }
-                LayoutItemProxy {
-                    target: sidebarSeparator
+                KSvg.SvgItem {
+                    id: sidebarSeparator
+
+                    Layout.fillWidth: true
+                    Layout.leftMargin: Kirigami.Units.smallSpacing
+                    Layout.rightMargin: Layout.leftMargin
+                    Layout.alignment: Qt.AlignHCenter
+
+                    visible: (favoriteApps.model && favoriteApps.model.count
+                        && favoriteSystemActions.model && favoriteSystemActions.model.count)
+
+                    imagePath: "widgets/line"
+                    elementId: "horizontal-line"
                 }
                 LayoutItemProxy {
                     target: sideBar.onTopPanel ? favoriteApps : favoriteSystemActions
@@ -145,21 +156,6 @@ PlasmaComponents3.ScrollView {
                         value: Kirigami.Units.iconSizes.medium
                         restoreMode: Binding.RestoreBinding
                     }
-                }
-
-                KSvg.SvgItem {
-                    id: sidebarSeparator
-
-                    Layout.fillWidth: true
-                    Layout.leftMargin: Kirigami.Units.smallSpacing
-                    Layout.rightMargin: Layout.leftMargin
-                    Layout.alignment: Qt.AlignHCenter
-
-                    visible: (favoriteApps.model && favoriteApps.model.count
-                        && favoriteSystemActions.model && favoriteSystemActions.model.count)
-
-                    imagePath: "widgets/line"
-                    elementId: "horizontal-line"
                 }
 
                 SideBarSection {
@@ -191,13 +187,12 @@ PlasmaComponents3.ScrollView {
 
             model: rootModel
 
+            LayoutMirroring.enabled: mainRow.LayoutMirroring.enabled
+
             onNavigateLeftRequested: {
                 currentIndex = -1
                 sideBar.forceActiveFocus(Qt.TabFocusReason)
                 root.ensureVisible(sideBar)
-            }
-            onKeyNavigationAtListEnd: {
-                searchField.focus = true;
             }
 
             states: State {
@@ -222,6 +217,10 @@ PlasmaComponents3.ScrollView {
 
             visible: searchField.text !== "" && runnerModel.count > 0
 
+            spacing: Kirigami.Units.smallSpacing
+
+            LayoutMirroring.enabled: mainRow.LayoutMirroring.enabled
+
             Repeater {
                 id: runnerColumnsRepeater
 
@@ -233,6 +232,8 @@ PlasmaComponents3.ScrollView {
                     visible: runnerModel.modelForRow(index).count > 0
 
                     mainSearchField: searchField
+
+                    LayoutMirroring.enabled: runnerColumns.LayoutMirroring.enabled
 
                     onKeyNavigationAtListEnd: {
                         searchField.focus = true;
@@ -384,10 +385,10 @@ PlasmaComponents3.ScrollView {
 
         Keys.priority: Keys.AfterItem // arrow keys should move cursor first
         Keys.onPressed: event => {
-            let backArrowKey = (event.key === Qt.Key_Left && Application.layoutDirection === Qt.LeftToRight) ||
-                (event.key === Qt.Key_Right && Application.layoutDirection === Qt.RightToLeft)
-            let forwardArrowKey = (event.key === Qt.Key_Right && Application.layoutDirection === Qt.LeftToRight) ||
-                (event.key === Qt.Key_Left && Application.layoutDirection === Qt.RightToLeft)
+            let backArrowKey = (event.key === Qt.Key_Left && !mainRow.LayoutMirroring.enabled) ||
+                (event.key === Qt.Key_Right && mainRow.LayoutMirroring.enabled)
+            let forwardArrowKey = (event.key === Qt.Key_Right && !mainRow.LayoutMirroring.enabled) ||
+                (event.key === Qt.Key_Left && mainRow.LayoutMirroring.enabled)
             if (event.key === Qt.Key_Up) {
                 if (rootList.visible) {
                     rootList.showChildDialogs = false;
