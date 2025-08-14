@@ -1,6 +1,7 @@
 FROM fedora:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV PLASMA_ADDONS_SOURCE_CODE_URL=https://github.com/SwiftOS-Linux/kdeplasma-addons.git
 
 # Update system and install essential development tools
 RUN dnf update -y && \
@@ -137,6 +138,22 @@ RUN dnf install -y xorg-x11-server-devel xorg --skip-unavailable
 RUN dnf install -y libxkbfile-devel
 RUN dnf install -y kaccounts-integration-devel PackageKit-qt6-devel noto-emoji-fonts --skip-unavailable
 RUN dnf install -y qcoro-qt6-devel
+RUN sudo dnf install --skip-unavailable \
+    kdeplasma-addons \
+    baloo-widgets \
+    dolphin-plugins \
+    ffmpegthumbs \
+    kde-inotify-survey \
+    kdeconnect-kde \
+    kdegraphics-thumbnailers \
+    kdenetwork-filesharing \
+    kdepim-addons \
+    kimageformats \
+    kio-admin \
+    kio-extras \
+    kio-fuse \
+    kio-gdrive || echo Skipped
+
 RUN passwd -d root
 RUN echo "startplasma-x11" > ~/.xsession
 RUN dnf install -y xorg-x11-server-Xorg xorg-x11-xinit xorg-x11-utils xorg-x11-fonts-Type1 --skip-unavailable
@@ -321,6 +338,15 @@ RUN git clone https://github.com/SwiftOS-Linux/plasma-workspace.git && \
     mkdir build && \
     cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr -Dkglobalacceld_PATH=/usr/libexec/ -DCMAKE_BUILD_TYPE=Release && \
+    make -j$(nproc) && \
+    make install
+
+RUN cd /root/
+RUN git clone ${PLASMA_ADDONS_SOURCE_CODE_URL} && \
+    cd kdeplasma-addons && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release && \
     make -j$(nproc) && \
     make install
 
